@@ -103,13 +103,41 @@ public class GameActivity extends Activity implements View.OnClickListener {
         myHandler = new Handler() {
             public void handleMessage(Message msg){
                 if(playSequence){
+                    //all buttons are visible
+                    button1.setVisibility(View.VISIBLE);
+                    button2.setVisibility(View.VISIBLE);
+                    button3.setVisibility(View.VISIBLE);
+                    button4.setVisibility(View.VISIBLE);
 
+                    switch (sequenceToCopy[elementToPlay]){
+                        case 1:
+                            button1.setVisibility(View.INVISIBLE);
+                            soundPool.play(sample1,1,1,0,0,1);
+                            break;
+                        case 2:
+                            button2.setVisibility(View.INVISIBLE);
+                            soundPool.play(sample2,1,1,0,0,1);
+                            break;
+                        case 3:
+                            button3.setVisibility(View.INVISIBLE);
+                            soundPool.play(sample3,1,1,0,0,1);
+                            break;
+                        case 4:
+                            button4.setVisibility(View.INVISIBLE);
+                            soundPool.play(sample4,1,1,0,0,1);
+                            break;
+                    }
+                    elementToPlay++;
+                    if(elementToPlay == diffcultyLevel){
+                        sequenceFinished();
+                    }
                 }
                 myHandler.sendEmptyMessageDelayed(0,900);
             }
         };
 
         myHandler.sendEmptyMessage(0);
+        playASequence();
     }
 
 
@@ -138,4 +166,17 @@ public class GameActivity extends Activity implements View.OnClickListener {
         textWatchGo.setText("WATCH!");
         playSequence = true;
     }
+
+    public void sequenceFinished(){
+        playSequence = false;
+        button1.setVisibility(View.VISIBLE);
+        button2.setVisibility(View.VISIBLE);
+        button3.setVisibility(View.VISIBLE);
+        button4.setVisibility(View.VISIBLE);
+        textWatchGo.setText("GO!");
+        isResponding = true;
+    }
+
+
+
 }
