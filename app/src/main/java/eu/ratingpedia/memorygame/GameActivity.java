@@ -9,6 +9,8 @@ import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Message;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,11 +19,12 @@ import java.io.IOException;
 import android.os.Handler;
 
 import java.util.Random;
-import java.util.logging.LogRecord;
+
 
 
 public class GameActivity extends Activity implements View.OnClickListener {
 
+    Animation wobble;
     private SoundPool soundPool;
     int sample1 = -1;
     int sample2 = -1;
@@ -69,6 +72,7 @@ public class GameActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
+        wobble = AnimationUtils.loadAnimation(this,R.anim.wobble);
         prefs = getSharedPreferences(dataName,MODE_PRIVATE);
         editor = prefs.edit();
         hiScore = prefs.getInt(intName,defaultInt);
@@ -118,26 +122,30 @@ public class GameActivity extends Activity implements View.OnClickListener {
             public void handleMessage(Message msg){
                 if(playSequence){
                     //all buttons are visible
-                    button1.setVisibility(View.VISIBLE);
-                    button2.setVisibility(View.VISIBLE);
-                    button3.setVisibility(View.VISIBLE);
-                    button4.setVisibility(View.VISIBLE);
+                    //button1.setVisibility(View.VISIBLE);
+                    //button2.setVisibility(View.VISIBLE);
+                    //button3.setVisibility(View.VISIBLE);
+                    //button4.setVisibility(View.VISIBLE);
 
                     switch (sequenceToCopy[elementToPlay]){
                         case 1:
-                            button1.setVisibility(View.INVISIBLE);
+                            //button1.setVisibility(View.INVISIBLE);
+                            button1.startAnimation(wobble);
                             soundPool.play(sample1,1,1,0,0,1);
                             break;
                         case 2:
-                            button2.setVisibility(View.INVISIBLE);
+                            //button2.setVisibility(View.INVISIBLE);
+                            button2.startAnimation(wobble);
                             soundPool.play(sample2,1,1,0,0,1);
                             break;
                         case 3:
-                            button3.setVisibility(View.INVISIBLE);
+                            //button3.setVisibility(View.INVISIBLE);
+                            button3.startAnimation(wobble);
                             soundPool.play(sample3,1,1,0,0,1);
                             break;
                         case 4:
-                            button4.setVisibility(View.INVISIBLE);
+                            //button4.setVisibility(View.INVISIBLE);
+                            button4.startAnimation(wobble);
                             soundPool.play(sample4,1,1,0,0,1);
                             break;
                     }
@@ -230,10 +238,10 @@ public class GameActivity extends Activity implements View.OnClickListener {
 
     public void sequenceFinished(){
         playSequence = false;
-        button1.setVisibility(View.VISIBLE);
-        button2.setVisibility(View.VISIBLE);
-        button3.setVisibility(View.VISIBLE);
-        button4.setVisibility(View.VISIBLE);
+        //button1.setVisibility(View.VISIBLE);
+        //button2.setVisibility(View.VISIBLE);
+        //button3.setVisibility(View.VISIBLE);
+        //button4.setVisibility(View.VISIBLE);
         textWatchGo.setText("GO!");
         isResponding = true;
     }
