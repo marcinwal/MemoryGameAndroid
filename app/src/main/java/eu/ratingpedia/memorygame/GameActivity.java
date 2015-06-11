@@ -50,7 +50,7 @@ public class GameActivity extends Activity implements View.OnClickListener {
     int elementToPlay = 0;
 
     //players answer
-    int playerResponse;
+    int playerResponses;
     int playerScore;
     boolean isResponding;
 
@@ -128,5 +128,14 @@ public class GameActivity extends Activity implements View.OnClickListener {
             sequenceToCopy[i] = ourRandom;
 
         }
+    }
+
+    public void playASequence(){
+        createSequece();
+        isResponding = false;
+        elementToPlay = 0;
+        playerResponses = 0;
+        textWatchGo.setText("WATCH!");
+        playSequence = true;
     }
 }
