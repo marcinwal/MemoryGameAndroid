@@ -1,6 +1,7 @@
 package eu.ratingpedia.memorygame;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.media.AudioManager;
@@ -54,10 +55,23 @@ public class GameActivity extends Activity implements View.OnClickListener {
     int playerScore;
     boolean isResponding;
 
+    SharedPreferences prefs;
+    SharedPreferences.Editor editor;
+    String dataName = "MyData";
+    String intName = "MyInt";
+    int defaultInt = 0;
+    int hiScore;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+
+        prefs = getSharedPreferences(dataName,MODE_PRIVATE);
+        editor = prefs.edit();
+        hiScore = prefs.getInt(intName,defaultInt);
 
         soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC,0);
         try{
@@ -143,7 +157,54 @@ public class GameActivity extends Activity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+        if(!playSequence){
+            switch(v.getId()){
+                case R.id.button:
+                    soundPool.play(sample1, 1, 1, 0, 0, 1);
+                    checkElement(1);
+                    break;
+                case R.id.button2:
+                    soundPool.play(sample2, 1, 1, 0, 0, 1);
+                    checkElement(2);
+                    break;
+                case R.id.button3:
+                    soundPool.play(sample3,1,1,0,0,1);
+                    checkElement(3);
+                    break;
+                case R.id.button4:
+                    soundPool.play(sample4,1,1,0,0,1);
+                    checkElement(4);
+                    break;
+            }
+        }
+    }
 
+    private void checkElement(int thisElement) {
+        if(isResponding){
+            playerResponses++;
+            if(sequenceToCopy[playerResponses-1] == thisElement) {
+                //correct
+                playerScore = playerScore + ((thisElement + 1) * 2);
+                textScore.setText("Score: " + playerScore);
+
+                if (playerResponses == diffcultyLevel) {
+                    //the whole sequence is solved
+                    isResponding = false;
+                    diffcultyLevel++;
+                    playASequence();
+                }
+            }else{
+                textWatchGo.setText("FAILED");
+                isResponding = false;
+
+                if(playerScore > hiScore){
+                    hiScore = playerScore;
+                    editor.putInt(intName,hiScore);
+                    editor.commit();
+                    Toast.makeText(getApplicationContext(),"New Hi-SCore",Toast.LENGTH_LONG).show();
+                }
+            }
+        }
     }
 
     public void createSequece(){
