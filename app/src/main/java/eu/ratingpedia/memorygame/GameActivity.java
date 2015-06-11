@@ -6,13 +6,17 @@ import android.content.res.AssetManager;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
+import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
-import java.util.logging.Handler;
+import android.os.Handler;
+
+import java.util.Random;
+import java.util.logging.LogRecord;
 
 
 public class GameActivity extends Activity implements View.OnClickListener {
@@ -36,12 +40,15 @@ public class GameActivity extends Activity implements View.OnClickListener {
 
     //some inits
     int diffcultyLevel = 3;
+
     //array for randomly generated sequence
     int[] sequenceToCopy = new int[100];
+
     //handler and sequence flag plus element we are playing
     private Handler myHandler;
     boolean playSequence = false;
     int elementToPlay = 0;
+
     //players answer
     int playerResponse;
     int playerScore;
@@ -72,12 +79,54 @@ public class GameActivity extends Activity implements View.OnClickListener {
         }catch(IOException e){
             Toast.makeText(getApplicationContext(),"COULD NOT LOAD FILES",Toast.LENGTH_LONG).show();
         }
+        //init text objects and buttons listeners
+        textScore = (TextView)findViewById(R.id.textScore);
+        textScore.setText("Score:"+playerScore);
 
+        textDifficulty = (TextView)findViewById(R.id.textDifficulty);
+        textDifficulty.setText("Difficulty:"+diffcultyLevel);
+        textWatchGo = (TextView)findViewById(R.id.textWatchGo);
+
+        button1 = (Button)findViewById(R.id.button);
+        button2 = (Button)findViewById(R.id.button2);
+        button3 = (Button)findViewById(R.id.button3);
+        button4 = (Button)findViewById(R.id.button4);
+        buttonReplay = (Button)findViewById(R.id.buttonReplay);
+
+        button1.setOnClickListener(this);
+        button2.setOnClickListener(this);
+        button3.setOnClickListener(this);
+        button4.setOnClickListener(this);
+        buttonReplay.setOnClickListener(this);
+
+        //creating a thread!
+        myHandler = new Handler() {
+            public void handleMessage(Message msg){
+                if(playSequence){
+
+                }
+                myHandler.sendEmptyMessageDelayed(0,900);
+            }
+        };
+
+        myHandler.sendEmptyMessage(0);
     }
 
 
     @Override
     public void onClick(View v) {
 
+    }
+
+    public void createSequece(){
+        Random randInt = new Random();
+        int ourRandom;
+        for(int i = 0;i <= diffcultyLevel;i++){
+            //get a random between 1 and 4
+            ourRandom = randInt.nextInt(4);
+            ourRandom++;
+            sequenceToCopy[i] = ourRandom;
+
+        }
     }
 }
